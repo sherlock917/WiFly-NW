@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WiFly</title>
+</head>
+<body>
+  <script>
+  var server = require('../controllers/server')
+  var storage = require('../controllers/storage')
+
+  if (!storage.getLocalStorage('name')) {
+    storage.setLocalStorage('name', prompt('Enter A Name For Your Device'))
+  }
+  server.start()
+  </script>
+</body>
+</html>
