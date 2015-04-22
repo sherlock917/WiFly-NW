@@ -1,0 +1,140 @@
+body {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* nav start */
+#nav {
+  width: 30%;
+  height: 100%;
+  padding: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #31c8fd;
+  color: #fff;
+}
+
+#nav-user {
+  font-size: 40px;
+}
+
+#nav-list {
+  margin-top: 50px;
+  vertical-align: bottom;
+}
+
+.nav-item {
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.nav-item:hover .nav-item-text {
+  opacity: 0.8;
+}
+
+.nav-item-current {
+  border-bottom: 1px solid #fff;
+}
+
+.nav-item-icon {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  background-size: cover;
+}
+.nav-item-icon-devices {
+  background-image: url(../img/devices_white.png);
+}
+.nav-item-icon-received {
+  background-image: url(../img/download_white.png);
+}
+.nav-item-icon-sent {
+  background-image: url(../img/upload_white.png);
+}
+
+.nav-item-text {
+  width: calc(100% - 50px);
+  height: 50px;
+  display: inline-block;
+  text-align: right;
+  font-size: 20px;
+  line-height: 50px;
+  color: #fff;
+}
+/* nav end */
+
+/* main start */
+#main {
+  width: 70%;
+  height: 100%;
+  padding: 15px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  overflow: auto;
+}
+
+.device-item {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  display: block;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #aaa;
+}
+
+.device-icon {
+  width: 80px;
+  height: 80px;
+  margin-right: 10px;
+  float: left;
+}
+
+.device-name {
+  width: 30%;
+  font-size: 25px;
+  display: inline-block;
+  color: #666;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.device-ip {
+  width: 50%;
+  display: inline-block;
+  color: #999;
+  overflow: hidden;
+}
+/* device end */
+
+/* gadgets start */
+#progress {
+  width: 250px;
+  height: 150px;
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 30%;
+  margin: auto;
+  background: #31c8fd;
+  border-radius: 10px;
+  color: #fff;
+  display: none;
+  opacity: 0;
+}
+#progress img {
+  width: 60px;
+  padding: 10px;
+  display: block;
+  margin: 0 auto 25px auto;
+  background: #fff;
+  border-radius: 50%;
+}
+#progress h3 {
+  text-align: center;
+  word-break: break-all;
+}

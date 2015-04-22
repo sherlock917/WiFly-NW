@@ -1,0 +1,25 @@
+/*
+ * common values
+ * main blue: #31c8fd
+ * dark text color: #666
+ * light text color: #999
+ */
+
+/* reset */
+
+* {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: none;
+  list-style: none;
+  text-decoration: none;
+
+  font-family: '微软雅黑', sans-serif;
+  font-weight: 100;
+
+  box-sizing: border-box;
+
+  transition: background 0.3s, color 0.3s, opacity 0.3s;
+}
