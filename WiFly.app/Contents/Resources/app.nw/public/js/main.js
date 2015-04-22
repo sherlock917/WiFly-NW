@@ -27,23 +27,64 @@
   var Page = {
     init : function () {
       this.initViews();
+      this.initEvents();
     },
     initViews : function () {
       $('#nav-user').text(storage.getLocalStorage('name'));
     },
+    initEvents : function () {
+      $('.nav-item').on('click', this.switchSection);
+    },
+    switchSection : function () {
+      Page.switchMain(this);
+      Page.switchNav(this);
+    },
+    switchNav : function (nav) {
+      if (!$(nav).hasClass('nav-item-current')) {
+        var target = $(nav).attr('id').split('-').pop();
+        $('.nav-item-current').removeClass('nav-item-current');
+        $(nav).addClass('nav-item-current');
+      }
+    },
+    switchMain : function (nav) {
+      var current = $('.nav-item-current').attr('id').split('-').pop();
+      var target = $(nav).attr('id').split('-').pop();
+      var currentDom = $('#section-' + current);
+      var targetDom = $('#section-' + target);
+      if (target == 'devices' && sizeOf(peers) <= 0) {
+        this.showProgress('Searching For Devices...');
+      } else {
+        this.hideProgress();
+      }
+      targetDom.show();
+      if (currentDom.attr('index') < targetDom.attr('index')) {
+        currentDom.addClass('section-popBig');
+        targetDom.addClass('section-popSmall');
+      } else {
+        currentDom.addClass('section-shrinkSmall');
+        targetDom.addClass('section-shrinkBig');
+      }
+      setTimeout(function () {
+        currentDom.hide();
+        $('.section').removeClass('section-popBig section-popSmall section-shrinkBig section-shrinkSmall');
+      }, 500);
+    },
     showProgress : function (hint) {
-      $('#progress')
-      .show(function () {
-        $(this).css('opacity', 1);
-      })
-      .find('h3')
-      .text(hint ? hint : 'Loading...');
+      if ($('#nav-item-devices').hasClass('nav-item-current')) {
+        $('#progress')
+        .css({
+          'opacity' : 1,
+          'z-index' : 1000
+        })
+        .find('h3')
+        .text(hint ? hint : 'Loading...');
+      }
     },
     hideProgress : function () {
-      $('#progress').css('opacity', 0);
-      setTimeout(function () {
-        $('#progress').hide();
-      }, 400);
+      $('#progress').css({
+        'opacity' : 0,
+        'z-index' : 1
+      });
     },
     addDevice : function (num) {
       var data = peers[num];
@@ -59,7 +100,7 @@
       delete peers[num];
       $('#device-' + num).remove();
       if (sizeOf(peers) <= 0) {
-        Page.showProgress('Searching For Device...');
+        Page.showProgress('Searching For Devices...');
       }
     }
   };

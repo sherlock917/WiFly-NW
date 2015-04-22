@@ -16,6 +16,7 @@ body {
   left: 0;
   background: #31c8fd;
   color: #fff;
+  z-index: 1000;
 }
 
 #nav-user {
@@ -30,6 +31,8 @@ body {
 .nav-item {
   cursor: pointer;
   margin-bottom: 20px;
+  border-bottom: 1px solid #31c8fd;
+  transition: border-bottom 0.3s;
 }
 .nav-item:hover .nav-item-text {
   opacity: 0.8;
@@ -74,7 +77,61 @@ body {
   position: absolute;
   top: 0;
   right: 0;
+  overflow: hidden;
+  background: #ddd;
+}
+
+.section {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #fff;
   overflow: auto;
+  display: none;
+}
+.section-current {
+  display: block;
+}
+.section-popBig {
+  -webkit-animation: popBig 0.5s;
+}
+.section-popSmall {
+  -webkit-animation: popSmall 0.5s;
+}
+.section-shrinkBig {
+  -webkit-animation: shrinkBig 0.5s;
+}
+.section-shrinkSmall {
+  -webkit-animation: shrinkSmall 0.5s;
+}
+
+#section-devices {
+  z-index: 30;
+}
+#section-received {
+  z-index: 20;
+}
+#section-sent {
+  z-index: 10;
+}
+
+@-webkit-keyframes popBig {
+  from {-webkit-transform: scale(1); opacity: 1;}
+  to {-webkit-transform: scale(1.5); opacity: 0;}
+}
+@-webkit-keyframes popSmall {
+  from {-webkit-transform: scale(0.5); opacity: 0;}
+  to {-webkit-transform: scale(1); opacity: 1;}
+}
+@-webkit-keyframes shrinkBig {
+  from {-webkit-transform: scale(1.5); opacity: 0;}
+  to {-webkit-transform: scale(1); opacity: 1;}
+}
+@-webkit-keyframes shrinkSmall {
+  from {-webkit-transform: scale(1); opacity: 1;}
+  to {-webkit-transform: scale(0.5); opacity: 0;}
 }
 
 .device-item {
@@ -123,8 +180,8 @@ body {
   background: #31c8fd;
   border-radius: 10px;
   color: #fff;
-  display: none;
   opacity: 0;
+  z-index: -1;
 }
 #progress img {
   width: 60px;

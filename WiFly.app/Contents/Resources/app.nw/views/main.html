@@ -8,7 +8,7 @@
 </head>
 <body>
   
-  <section id="nav">
+  <div id="nav">
     <header id="nav-header">
       <h1 id="nav-user"></h1>
     </header>
@@ -26,20 +26,28 @@
         <span class="nav-item-text">Sent</span>
       </li>
     </ul>
-  </section>
+  </div>
 
-  <section id="main">
-    <ul id="device-list">
-      <!-- <li class="device-item">
-        <img src="../public/img/mac.png" alt="" class="device-icon">
-        <p>
-          <span class="device-name">mac</span>
-          <span class="device-ip">192.168.199.100</span>
-        </p>
-        <p></p>
-      </li> -->
-    </ul>
-  </section>
+  <div id="main">
+    <section class="section section-current" id="section-devices" index="0">
+      <ul id="device-list">
+        <!-- <li class="device-item">
+          <img src="../public/img/mac.png" alt="" class="device-icon">
+          <p>
+            <span class="device-name">mac</span>
+            <span class="device-ip">192.168.199.100</span>
+          </p>
+          <p></p>
+        </li> -->
+      </ul>
+    </section>
+
+    <section class="section" id="section-received" index="1">
+    </section>
+
+    <section class="section" id="section-sent" index="2">
+    </section>
+  </div>
 
   <div id="progress">
     <img src="../public/img/loading.gif" alt="">
