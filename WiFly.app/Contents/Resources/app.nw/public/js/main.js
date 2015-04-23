@@ -102,6 +102,14 @@
       if (sizeOf(peers) <= 0) {
         Page.showProgress('Searching For Devices...');
       }
+    },
+    updateProgress : function (target, percentage) {
+      $('#device-' + target)
+      .find('.device-progress-inner')
+      .css('width', 200 * (percentage / 100) + 'px');
+      $('#device-' + target)
+      .find('.device-percentage')
+      .text(percentage + '%');
     }
   };
 

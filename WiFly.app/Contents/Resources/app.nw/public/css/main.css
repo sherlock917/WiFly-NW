@@ -143,6 +143,10 @@ body {
   border-bottom: 1px solid #aaa;
 }
 
+.device-item p {
+  margin-bottom: 10px;
+}
+
 .device-icon {
   width: 80px;
   height: 80px;
@@ -158,11 +162,50 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .device-ip {
   width: 50%;
   display: inline-block;
   color: #999;
   overflow: hidden;
+}
+
+.device-send {
+  width: 30px;
+  height: 30px;
+  display: block;
+  float: right;
+  cursor: pointer;
+  background: url(../img/send.png);
+  background-size: contain;
+}
+.device-send:hover {
+  opacity: 0.5;
+}
+
+.device-status,
+.device-progress-outer,
+.device-percentage {
+  display: inline-block;
+  line-height: 50px;
+  color: #ccc;
+}
+
+.device-progress-outer {
+  width: 200px;
+  height: 4px;
+  margin: 0 20px;
+  background: #eee;
+  border-radius: 2px;
+  overflow: hidden;
+  display: none;
+}
+.device-progress-inner {
+  width: 0px;
+  height: 4px;
+  display: block;
+  background: #31c8fd;
+  transition: width 0.3s;
 }
 /* device end */
 
