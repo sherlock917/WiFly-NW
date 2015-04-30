@@ -67,7 +67,7 @@
       setTimeout(function () {
         currentDom.hide();
         $('.section').removeClass('section-popBig section-popSmall section-shrinkBig section-shrinkSmall');
-      }, 500);
+      }, 2000);
     },
     showProgress : function (hint) {
       if ($('#nav-item-devices').hasClass('nav-item-current')) {
