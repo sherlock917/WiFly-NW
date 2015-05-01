@@ -1,16 +1,17 @@
 exports.start = function () {
-  var storage = require('./storage')
   var express = require('express')
+    , bodyParser = require('body-parser')
+    , route = require('./route')
+
   var app = express()
-  app.use(require('body-parser').json())
-  app.get('/id', function (req, res) {
-    res.writeHead(200, {'Content-Type' : 'application/json'})
-    res.end(JSON.stringify({
-      name : storage.getLocalStorage('name'),
-      url : exports.getBaseUrl() + '/',
-      type : 'mac'
-    }))
-  })
+  
+  app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(express.static(__dirname.substring(0, __dirname.length - 12) + '/public'))
+
+  app.get('/', route.index)
+  app.get('/id', route.id)
+
   app.listen(12580)
 }
 

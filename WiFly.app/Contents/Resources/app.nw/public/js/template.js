@@ -13,5 +13,10 @@ var Template = {
       '<span class="device-percentage"></span>',
       '<button class="device-send"></button>',
     '</p>',
+  '</li>'].join(''),
+
+  'web-upload-item' : ['<li class="list-item">',
+    '<span class="list-name"></span>',
+    '<span class="list-status"></span>',
   '</li>'].join('')
 };
