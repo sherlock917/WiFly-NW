@@ -57,4 +57,11 @@
 
 .list-status {
   text-align: right;
+  color: #999;
+}
+.list-status-success {
+  color: #0f0;
+}
+.list-status-error {
+  color: #f00;
 }

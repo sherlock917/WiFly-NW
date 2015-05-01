@@ -15,10 +15,12 @@
 
   function startUpload (e) {
     var file = e.target.files[0];
-    toggleSubmitDisabled(true);
-    toggleHint(false);
-    appendList(file);
-    startRequest(file);
+    if (file) {
+      toggleSubmitDisabled(true);
+      toggleHint(false);
+      appendList(file);
+      startRequest(file);
+    }
   }
 
   function appendList (file) {
@@ -26,11 +28,45 @@
     dom.attr('id', 'list-processing');
     dom.find('.list-name').text(file.name);
     dom.find('.list-status').text('requesting...');
-    $('.list-main').append(dom);
+    $('.list-main').prepend(dom);
   }
 
   function startRequest (file) {
-
+    var data = new FormData();
+    data.append('file', file);
+    data.append('name', file.name);
+    data.append('size', file.size);
+    data.append('type', file.type);
+    $.ajax({
+      url : location.href + 'upload',
+      type : 'POST',
+      data : data,
+      processData : false,
+      contentType : false,
+      error : function (data) {
+        $('#list-processing').find('.list-status').addClass('list-status-error').text('error');
+        $('#list-processing').removeAttr('id');
+        toggleSubmitDisabled(false);
+        $('#file').val('');
+      },
+      success : function (data) {
+        $('#list-processing').find('.list-status').addClass('list-status-success').text('√');
+        $('#list-processing').removeAttr('id');
+        toggleSubmitDisabled(false);
+        $('#file').val('');
+      },
+      xhr : function () {
+        var xhr = $.ajaxSettings.xhr();
+        xhr.upload.onprogress = function (progress) {
+          var percentage = Math.floor(progress.loaded / progress.total * 100);
+          $('#list-processing').find('.list-status').text('uploading: ' + percentage + '%');
+        }
+        xhr.upload.onload = function () {
+          $('#list-processing').find('.list-status').text('waiting...');
+        }
+        return xhr;
+      }
+    });
   }
 
   function toggleSubmitDisabled (disabled) {

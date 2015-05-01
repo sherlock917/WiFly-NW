@@ -5,12 +5,13 @@ exports.start = function () {
 
   var app = express()
   
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({ extended: false }))
+  // app.use(bodyParser.json())
+  // app.use(bodyParser.urlencoded({ extended: false }))
   app.use(express.static(__dirname.substring(0, __dirname.length - 12) + '/public'))
 
   app.get('/', route.index)
   app.get('/id', route.id)
+  app.post('/upload', route.upload)
 
   app.listen(12580)
 }
