@@ -15,6 +15,13 @@ var Template = {
     '</p>',
   '</li>'].join(''),
 
+  'received-item' : ['<li class="received-item">',
+    '<span class="received-icon"></span>',
+    '<span class="received-name"></span>',
+    '<span class="received-size"></span>',
+    '<span class="received-time"></span>',
+  '</li>'].join(''),
+
   'web-upload-item' : ['<li class="list-item">',
     '<span class="list-name"></span>',
     '<span class="list-status"></span>',

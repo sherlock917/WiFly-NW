@@ -46,6 +46,7 @@
     data.append('name', file.name);
     data.append('size', file.size);
     data.append('type', file.type);
+    data.append('from', 'web');
     $.ajax({
       url : location.href + 'upload',
       type : 'POST',

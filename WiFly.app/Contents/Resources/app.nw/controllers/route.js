@@ -32,7 +32,7 @@ exports.upload = function (req, res) {
   if (dirSet == 'ask' || !dir) {
     dir = exec('./extensions/DirectoryChooser.app/Contents/MacOS/DirectoryChooser', {encoding : 'utf-8'})
   }
-  if (!dir || dir == '') {
+  if (dir == '') {
     res.writeHead(500);
     res.end();
   } else {
@@ -44,6 +44,16 @@ exports.upload = function (req, res) {
       if (err) {
         res.writeHead(500)
       } else {
+        var path = dir + '/' + files.file.name
+        fs.renameSync(files.file.path, path)
+        storage.addReceived({
+          path : path,
+          name : files.file.name,
+          size : files.file.size,
+          type : files.file.type,
+          from : files.file.from,
+          time : (new Date()).getTime()
+        })
         res.writeHead(200)
       }
       res.end()

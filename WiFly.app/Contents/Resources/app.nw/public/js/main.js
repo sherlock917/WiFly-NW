@@ -1,7 +1,8 @@
 (function () {
 
   var request = require('request'),
-      exec = require('child_process').execSync,
+      exec = require('child_process').exec,
+      execSync = require('child_process').execSync,
       interfaces = require('os').networkInterfaces();
 
   var server = require('../controllers/server'),
@@ -15,7 +16,7 @@
   window.onload = function () {
     Page.init();
     Core.init();
-    $('#nav-item-setting').click();
+    $('#nav-item-received').click();
   }
 
   function sizeOf (obj) {
@@ -32,6 +33,7 @@
     init : function () {
       this.initViews();
       this.initEvents();
+      this.refreshReceived();
     },
     initViews : function () {
       var name = storage.getLocalStorage('name');
@@ -151,7 +153,7 @@
       if (storage.getLocalStorage('dir')) {
         storage.setLocalStorage('dirSet', 'default');
       } else {
-        var dir = exec('./extensions/DirectoryChooser.app/Contents/MacOS/DirectoryChooser', {encoding : 'utf-8'})
+        var dir = execSync('./extensions/DirectoryChooser.app/Contents/MacOS/DirectoryChooser', {encoding : 'utf-8'})
         if (dir == '') {
           alert('Please Select A Directory');
           $('#dir-ask').click();
@@ -164,13 +166,35 @@
     },
     updateDirDefault : function (e) {
       e.preventDefault();
-      var dir = exec('./extensions/DirectoryChooser.app/Contents/MacOS/DirectoryChooser', {encoding : 'utf-8'})
+      var dir = execSync('./extensions/DirectoryChooser.app/Contents/MacOS/DirectoryChooser', {encoding : 'utf-8'})
       if (dir == '') {
         alert('Failed To Update Download Directory');
       } else {
         $('#dir-link').attr('title', dir);
         storage.setLocalStorage('dir', dir);
       }
+    },
+    refreshReceived : function () {
+      $('#received-list').html('');
+      var items = storage.listReceived();
+      for (var i in items) {
+        var dom = $(Template['received-item']);
+        dom.attr('path', items[i].path);
+        dom.find('.received-name').text(items[i].name);
+        dom.find('.received-size').text(Util.formatSize(items[i].size));
+        dom.find('.received-time').text(Util.formatDate(items[i].time));
+        dom.find('.received-icon').addClass(Util.detectFileIcon(items[i].type));
+        $('#received-list').prepend(dom);
+      }
+      $('.received-item').on('click', this.openFile);
+    },
+    openFile : function () {
+      var path = $(this).attr('path');
+      exec('open ' + path, function (err, stdout, stderr) {
+        if (err || stderr) {
+          alert('Cannot Open:\n' + path + '\n\nFile May Be Moved Or Deleted');
+        }
+      });
     }
   };
 
@@ -229,5 +253,32 @@
       }, 3000);
     }
   };
+
+  var Util = {
+    formatSize : function (size) {
+      if (size < 1000000) {
+        return (size / 1000).toFixed(2) + ' KB';
+      } else if (size < 1000000000) {
+        return (size / 1000000).toFixed(2) + ' MB';
+      } else {
+        return (size / 1000000000).toFixed(2) + ' GB';
+      }
+    },
+    formatDate : function (date) {
+      var d = new Date(date);
+      var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return months[d.getMonth()] + ' '
+             + (d.getDate() < 10 ? '0' + d.getDate() : d.getDate()) + ', '
+             + (d.getHours() < 10 ? '0' + d.getHours() : d.getHours()) + ':'
+             + (d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes());
+    },
+    detectFileIcon : function (mime) {
+      if (mime.indexOf('image') == 0) {
+        return 'received-icon-image';
+      } else if (mime.indexOf('audio' == 0)) {
+        return 'received-icon-audio';
+      }
+    }
+  }
 
 })();

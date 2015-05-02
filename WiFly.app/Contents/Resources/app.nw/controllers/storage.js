@@ -29,3 +29,16 @@ exports.delLocalStorage = function (key) {
     }
   }
 }
+
+exports.addReceived = function (file) {
+  var history = exports.listReceived()
+  if (!history) {
+    history = []
+  }
+  history.push(file)
+  exports.setLocalStorage('received', JSON.stringify(history))
+}
+
+exports.listReceived = function () {
+  return JSON.parse(exports.getLocalStorage('received'))
+}
