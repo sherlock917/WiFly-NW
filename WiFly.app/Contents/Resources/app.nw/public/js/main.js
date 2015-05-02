@@ -9,9 +9,12 @@
   var peers = {};
   var prefix = '', suffix = 1, selfSuffix = 0;
 
+  var host = server.getBaseUrl();
+
   window.onload = function () {
     Page.init();
     Core.init();
+    $('#nav-item-setting').click();
   }
 
   function sizeOf (obj) {
@@ -31,20 +34,26 @@
     },
     initViews : function () {
       $('#nav-user').text(storage.getLocalStorage('name'));
+
+      new QRCode(document.getElementById("qrcode"), {
+        text: host,
+        width : 150,
+        height : 150
+      });
     },
     initEvents : function () {
       $('.nav-item').on('click', this.switchSection);
     },
     switchSection : function () {
-      Page.switchMain(this);
-      Page.switchNav(this);
+      if (!$(this).hasClass('nav-item-current')) {
+        Page.switchMain(this);
+        Page.switchNav(this);
+      }
     },
     switchNav : function (nav) {
-      if (!$(nav).hasClass('nav-item-current')) {
-        var target = $(nav).attr('id').split('-').pop();
-        $('.nav-item-current').removeClass('nav-item-current');
-        $(nav).addClass('nav-item-current');
-      }
+      var target = $(nav).attr('id').split('-').pop();
+      $('.nav-item-current').removeClass('nav-item-current');
+      $(nav).addClass('nav-item-current');
     },
     switchMain : function (nav) {
       var current = $('.nav-item-current').attr('id').split('-').pop();

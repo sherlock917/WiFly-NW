@@ -21,7 +21,7 @@ exports.id = function (req, res) {
   res.writeHead(200, {'Content-Type' : 'application/json'})
   res.end(JSON.stringify({
     name : storage.getLocalStorage('name'),
-    url : server.getBaseUrl() + '/',
+    url : server.getBaseUrl(),
     type : 'mac'
   }))
 }

@@ -30,5 +30,5 @@ exports.getHostIp = function () {
 }
 
 exports.getBaseUrl = function () {
-  return 'http://' + exports.getHostIp() + ':12580'
+  return 'http://' + exports.getHostIp() + ':12580/'
 }

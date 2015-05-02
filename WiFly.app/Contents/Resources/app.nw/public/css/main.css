@@ -34,8 +34,8 @@ body {
   border-bottom: 1px solid #31c8fd;
   transition: border-bottom 0.3s;
 }
-.nav-item:hover .nav-item-text {
-  opacity: 0.8;
+.nav-item:hover {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .nav-item-current {
@@ -56,6 +56,9 @@ body {
 }
 .nav-item-icon-sent {
   background-image: url(../img/upload_white.png);
+}
+.nav-item-icon-setting {
+  background-image: url(../img/setting_white.png);
 }
 
 .nav-item-text {
