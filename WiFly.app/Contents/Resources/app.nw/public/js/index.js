@@ -1,7 +1,16 @@
 (function () {
 
   window.onload = function () {
+    getHostName();
     eventsHandler();
+  }
+
+  function getHostName () {
+    $.get(location.href + 'id', function (data) {
+      if (data) {
+        $('#submit').text('UPLOAD TO "' + data.name + '"');
+      }
+    });
   }
 
   function eventsHandler () {

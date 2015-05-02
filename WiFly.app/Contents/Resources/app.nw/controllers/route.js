@@ -27,9 +27,12 @@ exports.id = function (req, res) {
 }
 
 exports.upload = function (req, res) {
-  var dir = exec('./extensions/DirectoryChooser.app/Contents/MacOS/DirectoryChooser', {encoding : 'utf-8'})
-  console.log(dir)
-  if (dir == '') {
+  var dirSet = storage.getLocalStorage('dirSet');
+  var dir = storage.getLocalStorage('dir');
+  if (dirSet == 'ask' || !dir) {
+    dir = exec('./extensions/DirectoryChooser.app/Contents/MacOS/DirectoryChooser', {encoding : 'utf-8'})
+  }
+  if (!dir || dir == '') {
     res.writeHead(500);
     res.end();
   } else {

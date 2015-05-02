@@ -1,6 +1,7 @@
 (function () {
 
   var request = require('request'),
+      exec = require('child_process').execSync,
       interfaces = require('os').networkInterfaces();
 
   var server = require('../controllers/server'),
@@ -33,7 +34,21 @@
       this.initEvents();
     },
     initViews : function () {
-      $('#nav-user').text(storage.getLocalStorage('name'));
+      var name = storage.getLocalStorage('name');
+
+      $('#nav-user').text(name);
+      $('#setting-name').val(name);
+      $('#host').text(host);
+
+      if (storage.getLocalStorage('dirSet') == 'default') {
+        $('#dir-default').attr('checked', 'default');
+      } else {
+        $('#dir-ask').attr('checked', 'ask');
+      }
+
+      if (storage.getLocalStorage('dir')) {
+        $('#dir-link').attr('title', storage.getLocalStorage('dir'));
+      }
 
       new QRCode(document.getElementById("qrcode"), {
         text: host,
@@ -43,6 +58,10 @@
     },
     initEvents : function () {
       $('.nav-item').on('click', this.switchSection);
+      $('#setting-name').on('keyup', this.updateName);
+      $('#dir-ask').on('click', this.setDirAsk);
+      $('#dir-default').on('click', this.setDirDefault);
+      $('#dir-link').on('click', this.updateDirDefault);
     },
     switchSection : function () {
       if (!$(this).hasClass('nav-item-current')) {
@@ -92,7 +111,7 @@
     hideProgress : function () {
       $('#progress').css({
         'opacity' : 0,
-        'z-index' : 1
+        'z-index' : -1
       });
     },
     addDevice : function (num) {
@@ -119,6 +138,39 @@
       $('#device-' + target)
       .find('.device-percentage')
       .text(percentage + '%');
+    },
+    updateName : function () {
+      var name = $(this).val();
+      $('#nav-user').text(name);
+      storage.setLocalStorage('name', name);
+    },
+    setDirAsk : function () {
+      storage.setLocalStorage('dirSet', 'ask');
+    },
+    setDirDefault : function () {
+      if (storage.getLocalStorage('dir')) {
+        storage.setLocalStorage('dirSet', 'default');
+      } else {
+        var dir = exec('./extensions/DirectoryChooser.app/Contents/MacOS/DirectoryChooser', {encoding : 'utf-8'})
+        if (dir == '') {
+          alert('Please Select A Directory');
+          $('#dir-ask').click();
+        } else {
+          storage.setLocalStorage('dirSet', 'default');
+          storage.setLocalStorage('dir', dir);
+          $('#dir-link').attr('title', dir);
+        }
+      }
+    },
+    updateDirDefault : function (e) {
+      e.preventDefault();
+      var dir = exec('./extensions/DirectoryChooser.app/Contents/MacOS/DirectoryChooser', {encoding : 'utf-8'})
+      if (dir == '') {
+        alert('Failed To Update Download Directory');
+      } else {
+        $('#dir-link').attr('title', dir);
+        storage.setLocalStorage('dir', dir);
+      }
     }
   };
 
