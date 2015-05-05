@@ -16,7 +16,7 @@
   window.onload = function () {
     Page.init();
     Core.init();
-    $('#nav-item-received').click();
+    // $('#nav-item-received').click();
   }
 
   function sizeOf (obj) {
