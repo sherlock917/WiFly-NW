@@ -16,7 +16,7 @@
   window.onload = function () {
     Page.init();
     Core.init();
-    // $('#nav-item-received').click();
+    $('#nav-item-setting').click();
   }
 
   function sizeOf (obj) {
@@ -52,6 +52,10 @@
         $('#dir-link').attr('title', storage.getLocalStorage('dir'));
       }
 
+      if (storage.getLocalStorage('del') == 'keep') {
+        $('#del-keep').attr('checked', true);
+      }
+
       new QRCode(document.getElementById("qrcode"), {
         text: host,
         width : 150,
@@ -64,6 +68,7 @@
       $('#dir-ask').on('click', this.setDirAsk);
       $('#dir-default').on('click', this.setDirDefault);
       $('#dir-link').on('click', this.updateDirDefault);
+      $('#del-keep').on('click', this.setDeleteKeep);
     },
     switchSection : function () {
       if (!$(this).hasClass('nav-item-current')) {
@@ -174,6 +179,13 @@
         storage.setLocalStorage('dir', dir);
       }
     },
+    setDeleteKeep : function () {
+      if (!$(this).attr('checked')) {
+        storage.setLocalStorage('del', 'keep');
+      } else {
+        storage.setLocalStorage('del', 'remove');
+      }
+    },
     refreshReceived : function () {
       $('#received-list').html('');
       var items = storage.listReceived();
@@ -184,6 +196,7 @@
         dom.find('.received-size').text(Util.formatSize(items[i].size));
         dom.find('.received-time').text(Util.formatDate(items[i].time));
         dom.find('.received-icon').addClass(Util.detectFileIcon(items[i].type));
+        dom.find('.received-delete').click(Page.deleteFile);
         $('#received-list').prepend(dom);
       }
       $('.received-item').on('click', this.openFile);
@@ -195,6 +208,12 @@
           alert('Cannot Open:\n' + path + '\n\nFile May Be Moved Or Deleted');
         }
       });
+    },
+    deleteFile : function (e) {
+      e.stopPropagation();
+      var path = $(this).parent().attr('path');
+      storage.deleteReceived(path);
+      $(this).parent().slideUp(300);
     }
   };
 

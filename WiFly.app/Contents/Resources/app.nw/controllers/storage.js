@@ -39,6 +39,21 @@ exports.addReceived = function (file) {
   exports.setLocalStorage('received', JSON.stringify(history))
 }
 
+exports.deleteReceived = function (path) {
+  var fs = require('fs')
+  if (exports.getLocalStorage('del') != 'keep' && fs.existsSync(path)) {
+    fs.unlinkSync(path)
+  }
+  var history = exports.listReceived();
+  for (var i in history) {
+    if (history[i].path == path) {
+      history.splice(i, 1)
+      break
+    }
+  }
+  exports.setLocalStorage('received', JSON.stringify(history))
+}
+
 exports.listReceived = function () {
   return JSON.parse(exports.getLocalStorage('received'))
 }

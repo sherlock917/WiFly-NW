@@ -20,6 +20,7 @@ var Template = {
     '<span class="received-name"></span>',
     '<span class="received-size"></span>',
     '<span class="received-time"></span>',
+    '<button class="received-delete">X</button>',
   '</li>'].join(''),
 
   'web-upload-item' : ['<li class="list-item">',

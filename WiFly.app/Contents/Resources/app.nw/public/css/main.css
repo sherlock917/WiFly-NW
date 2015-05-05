@@ -238,6 +238,10 @@ body {
 .received-item:hover .received-name {
   color: #31c8fd;
 }
+.received-item:hover .received-delete {
+  opacity: 1;
+  z-index: 10;
+}
 
 .received-name,
 .received-size,
@@ -286,6 +290,22 @@ body {
 }
 .received-icon-archieve {
   background-image: url(../img/file_archieve.png);
+}
+
+.received-delete {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  margin: -10px 0 0 -15px;
+  color: #fff;
+  background: #f00;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  z-index: -1;
+}
+.received-item .received-delete:hover {
+  opacity: 0.7;
 }
 /* received end */
 
