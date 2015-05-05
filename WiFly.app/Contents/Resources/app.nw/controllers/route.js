@@ -57,6 +57,7 @@ exports.upload = function (req, res) {
         res.writeHead(200)
       }
       res.end()
+      window.Interface.refresh();
     })
   }
 }

@@ -256,6 +256,7 @@
 
   var Util = {
     formatSize : function (size) {
+      size = parseInt(size);
       if (size < 1000000) {
         return (size / 1000).toFixed(2) + ' KB';
       } else if (size < 1000000000) {
@@ -278,6 +279,12 @@
       } else if (mime.indexOf('audio' == 0)) {
         return 'received-icon-audio';
       }
+    }
+  }
+
+  window.Interface = {
+    refresh : function () {
+      Page.refreshReceived();
     }
   }
 
