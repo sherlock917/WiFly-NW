@@ -21,10 +21,10 @@
         <span class="nav-item-icon nav-item-icon-received"></span>
         <span class="nav-item-text">Received</span>
       </li>
-      <li class="nav-item" id="nav-item-sent">
+      <!-- <li class="nav-item" id="nav-item-sent">
         <span class="nav-item-icon nav-item-icon-sent"></span>
         <span class="nav-item-text">Sent</span>
-      </li>
+      </li> -->
       <li class="nav-item" id="nav-item-setting">
         <span class="nav-item-icon nav-item-icon-setting"></span>
         <span class="nav-item-text">Setting</span>
@@ -34,38 +34,17 @@
 
   <div id="main">
     <section class="section section-current" id="section-devices" index="0">
-      <ul id="device-list">
-        <!-- <li class="device-item" id="device-000">
-          <img src="../public/img/mac.png" alt="" class="device-icon">
-          <p>
-            <span class="device-name">mac</span>
-            <span class="device-ip">192.168.199.100</span>
-          </p>
-          <p>
-            <span class="device-status">正在发送...</span>
-            <span class="device-progress-outer">
-              <span class="device-progress-inner"></span>
-            </span>
-            <span class="device-percentage">90%</span>
-            <button class="device-send"></button>
-          </p>
-        </li> -->
-      </ul>
+      <input type="file" id="file">
+      <iframe src="" id="iframe"></iframe>
+      <ul id="device-list"></ul>
     </section>
 
     <section class="section" id="section-received" index="1">
-      <ul id="received-list">
-        <!-- <li class="received-item">
-          <span class="received-icon received-icon-image"></span>
-          <span class="received-name">what.jpg</span>
-          <span class="received-size">21KB</span>
-          <span class="received-time">Mar 02, 18:00</span>
-        </li> -->
-      </ul>
+      <ul id="received-list"></ul>
     </section>
 
-    <section class="section" id="section-sent" index="2">
-    </section>
+    <!-- <section class="section" id="section-sent" index="2">
+    </section> -->
 
     <section class="section" id="section-setting" index="3">
       <div id="qrcode"></div>

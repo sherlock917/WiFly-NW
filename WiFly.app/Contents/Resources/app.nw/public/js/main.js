@@ -10,13 +10,14 @@
 
   var peers = {};
   var prefix = '', suffix = 1, selfSuffix = 0;
+  var targetNum, targetUrl;
 
   var host = server.getBaseUrl();
 
   window.onload = function () {
     Page.init();
     Core.init();
-    $('#nav-item-setting').click();
+    // $('#nav-item-setting').click();
   }
 
   function sizeOf (obj) {
@@ -69,6 +70,7 @@
       $('#dir-default').on('click', this.setDirDefault);
       $('#dir-link').on('click', this.updateDirDefault);
       $('#del-keep').on('click', this.setDeleteKeep);
+      $('#file').on('change', this.performSend);
     },
     switchSection : function () {
       if (!$(this).hasClass('nav-item-current')) {
@@ -128,6 +130,7 @@
       dom.find('.device-icon').attr('src', '../public/img/' + data.type + '.png');
       dom.find('.device-name').text(data.name);
       dom.find('.device-ip').text(data.url.substring(7, data.url.indexOf(':12580')));
+      dom.find('.device-send').click(this.sendFile);
       dom.appendTo('#device-list');
       Page.hideProgress();
     },
@@ -214,6 +217,69 @@
       var path = $(this).parent().attr('path');
       storage.deleteReceived(path);
       $(this).parent().slideUp(300);
+    },
+    sendFile : function (e) {
+      e.stopPropagation();
+      var num = $(this).parent().parent().attr('id').split('-').pop();
+      var target = peers[num];
+      var url;
+      if (target.type == 'ios') {
+        url = target.url.replace(/:12580/, '') + 'upload';
+      } else  {
+        url = target.url + 'upload';
+      }
+      targetNum = num;
+      targetUrl = url;
+      $('#file').click();
+    },
+    performSend : function (e) {
+      var file = e.target.files[0];
+      if (file) {
+        $('#device-' + targetNum)
+        .find('.device-status')
+        .removeClass('device-status-error device-status-success')
+        .text('sending...');
+        $('#device-' + targetNum)
+        .find('.device-progress-outer')
+        .css('display', 'inline-block');
+        $('#device-' + targetNum)
+        .find('.device-progress-inner')
+        .css('width', '0px');
+        if (targetUrl.indexOf(':12580') < 0) {
+          Page.sendToIos(file);
+        }
+      }
+    },
+    sendToIos : function (file) {
+      $('#iframe').attr('src', targetUrl.replace(/upload/, ''));
+      $('#iframe').on('load', function () {
+        var win = $('#iframe')[0].contentWindow;
+        var progress = $(win.document).find('#progress')[0];
+        win.startRequest(file, storage.getLocalStorage('name'));
+        var interval = setInterval(function () {
+          if (progress.value == '√' || progress.value == 'error') {
+            clearInterval(interval);
+
+            $('#device-' + targetNum)
+            .find('.device-percentage')
+            .text('');
+
+            $('#device-' + targetNum)
+            .find('.device-progress-outer')
+            .hide();
+
+            var remove = progress.value == 'error' ? 'device-status-success' : 'device-status-error';
+            var add = progress.value == 'error' ? 'device-status-error' : 'device-status-success';
+            $('#device-' + targetNum)
+            .find('.device-status')
+            .removeClass(remove)
+            .addClass(add)
+            .text(progress.value);
+          } else {
+            Page.updateProgress(targetNum, parseInt(progress.value));
+          }
+        }, 100);
+      });
     }
   };
 
