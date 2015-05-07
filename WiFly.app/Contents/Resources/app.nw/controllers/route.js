@@ -40,9 +40,12 @@ exports.upload = function (req, res) {
     form.encoding = 'utf-8'
     form.uploadDir = dir
     form.keepExtensions = true
+    form.on('progress', function (bytesReceived, bytesExpected) {
+      res.write((bytesReceived / bytesExpected * 100 ).toFixed(0))
+    })
     form.parse(req, function(err, fields, files) {
       if (err) {
-        res.writeHead(500)
+        res.statusCode = 500
       } else {
         var path = dir + '/' + files.file.name
         fs.renameSync(files.file.path, path)
@@ -54,7 +57,7 @@ exports.upload = function (req, res) {
           from : files.file.from,
           time : (new Date()).getTime()
         })
-        res.writeHead(200)
+        res.statusCode = 200
       }
       res.end()
       window.Interface.refresh();

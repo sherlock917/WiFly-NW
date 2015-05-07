@@ -70,7 +70,7 @@
       $('#dir-default').on('click', this.setDirDefault);
       $('#dir-link').on('click', this.updateDirDefault);
       $('#del-keep').on('click', this.setDeleteKeep);
-      $('#file').on('change', this.performSend);
+      $('#file').on('change', this.sendFile);
     },
     switchSection : function () {
       if (!$(this).hasClass('nav-item-current')) {
@@ -130,7 +130,7 @@
       dom.find('.device-icon').attr('src', '../public/img/' + data.type + '.png');
       dom.find('.device-name').text(data.name);
       dom.find('.device-ip').text(data.url.substring(7, data.url.indexOf(':12580')));
-      dom.find('.device-send').click(this.sendFile);
+      dom.find('.device-send').click(this.selectFile);
       dom.appendTo('#device-list');
       Page.hideProgress();
     },
@@ -218,7 +218,7 @@
       storage.deleteReceived(path);
       $(this).parent().slideUp(300);
     },
-    sendFile : function (e) {
+    selectFile : function (e) {
       e.stopPropagation();
       var num = $(this).parent().parent().attr('id').split('-').pop();
       var target = peers[num];
@@ -232,7 +232,7 @@
       targetUrl = url;
       $('#file').click();
     },
-    performSend : function (e) {
+    sendFile : function (e) {
       var file = e.target.files[0];
       if (file) {
         $('#device-' + targetNum)
@@ -247,6 +247,8 @@
         .css('width', '0px');
         if (targetUrl.indexOf(':12580') < 0) {
           Page.sendToIos(file);
+        } else {
+          Page.performSend(file);
         }
       }
     },
@@ -279,6 +281,44 @@
             Page.updateProgress(targetNum, parseInt(progress.value));
           }
         }, 100);
+      });
+    },
+    performSend : function (file) {
+      var fs = require('fs');
+
+      var data = {}
+      data.file = fs.createReadStream(file.path);
+      data.name = file.name;
+      data.size = file.size;
+      data.type = file.type;
+      data.from = storage.getLocalStorage('name');
+
+      request.post({url : targetUrl, formData : data}, function (err, res, body) {
+        console.log(res);
+
+        $('#device-' + targetNum)
+        .find('.device-percentage')
+        .text('');
+
+        $('#device-' + targetNum)
+        .find('.device-progress-outer')
+        .hide();
+
+        if (err || res.statusCode != 200) {
+          $('#device-' + targetNum)
+          .find('.device-status')
+          .removeClass('device-status-success')
+          .addClass('device-status-error')
+          .text('error');
+        } else {
+          $('#device-' + targetNum)
+          .find('.device-status')
+          .removeClass('device-status-error')
+          .addClass('device-status-success')
+          .text('√');
+        }
+      }).on('data', function (data) {
+        Page.updateProgress(targetNum, data.toString());
       });
     }
   };
