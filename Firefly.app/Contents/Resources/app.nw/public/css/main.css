@@ -14,7 +14,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  background: #31c8fd;
+  background: #04de71;
   color: #fff;
   z-index: 1000;
 }
@@ -31,7 +31,7 @@ body {
 .nav-item {
   cursor: pointer;
   margin-bottom: 20px;
-  border-bottom: 1px solid #31c8fd;
+  border-bottom: 1px solid #04de71;
   transition: border-bottom 0.3s;
 }
 .nav-item:hover {
@@ -227,7 +227,7 @@ body {
   width: 0px;
   height: 4px;
   display: block;
-  background: #31c8fd;
+  background: #04de71;
   transition: width 0.1s;
 }
 /* device end */
@@ -244,10 +244,10 @@ body {
   transition: border-bottom 0.3s;
 }
 .received-item:hover {
-  border-bottom: 1px solid #31c8fd;
+  border-bottom: 1px solid #04de71;
 }
 .received-item:hover .received-name {
-  color: #31c8fd;
+  color: #04de71;
 }
 .received-item:hover .received-delete {
   opacity: 1;
@@ -358,12 +358,12 @@ body {
   transition: border-bottom 0.3s, color 0.3s;
 }
 .setting-input:focus {
-  border-bottom: 1px solid #31c8fd;
-  color: #31c8fd;
+  border-bottom: 1px solid #04de71;
+  color: #04de71;
 }
 
 #dir-link {
-  color: #31c8fd;
+  color: #04de71;
 }
 #dir-link:hover {
   opacity: 0.5;
@@ -381,7 +381,7 @@ body {
   bottom: 0;
   left: 30%;
   margin: auto;
-  background: #31c8fd;
+  background: #04de71;
   border-radius: 10px;
   color: #fff;
   opacity: 0;

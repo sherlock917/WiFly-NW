@@ -1,7 +1,7 @@
 .header {
   width: 100%;
   height: 50px;
-  background: rgba(49, 200, 253, 0.9);
+  background: rgba(4, 222, 113, 0.9);
 }
 
 .header-icon {
@@ -22,7 +22,7 @@
   width: 100%;
   height: 40px;
   display: block;
-  background: #31c8fd;
+  background: #04de71;
   color: #fff;
   font-size: 20px;
   cursor: pointer;
