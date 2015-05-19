@@ -131,6 +131,7 @@
       dom.find('.device-name').text(data.name);
       dom.find('.device-ip').text(data.url.substring(7, data.url.indexOf(':12580')));
       dom.find('.device-send').click(this.selectFile);
+      dom.find('.device-chat').click(this.chat);
       dom.appendTo('#device-list');
       Page.hideProgress();
     },
@@ -231,6 +232,20 @@
       targetNum = num;
       targetUrl = url;
       $('#file').click();
+    },
+    chat : function (e) {
+      e.stopPropagation();
+      var num = $(this).parent().parent().attr('id').split('-').pop();
+      var target = peers[num].url;
+      var targetName = $(this).parent().parent().find('.device-name').text();
+      var url = target + 'chat';
+      var content = prompt('Enter Message For ' + targetName + ':');
+      if (content && content.length > 0) {
+        var from = 'from=' + storage.getLocalStorage('name');
+        var content = 'content=' + content;
+        var replyUrl = 'url=' + server.getBaseUrl() + 'chat';
+        request(encodeURI(url + '?' + from + '&' + content + '&' + replyUrl));
+      }
     },
     sendFile : function (e) {
       var file = e.target.files[0];

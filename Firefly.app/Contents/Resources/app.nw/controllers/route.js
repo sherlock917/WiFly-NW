@@ -1,5 +1,7 @@
 var fs = require('fs')
+  , url = require('url')
   , exec = require('child_process').execSync
+  , request = require('request')
   , formidable = require('formidable')
 
 var storage = require('./storage')
@@ -62,5 +64,16 @@ exports.upload = function (req, res) {
       res.end()
       window.Interface.refresh();
     })
+  }
+}
+
+exports.chat = function (req, res) {
+  var query = url.parse('http://0.0.0.0' + req.url, true).query
+  var reply = window.prompt(query.from + ':\n' + query.content)
+  if (reply && reply.length > 0) {
+    var from = 'from=' + storage.getLocalStorage('name')
+    var content = 'content=' + reply
+    var replyUrl = 'url=' + server.getBaseUrl() + 'chat'
+    request(window.encodeURI(query.url + '?' + from + '&' + content + '&' + replyUrl))
   }
 }
