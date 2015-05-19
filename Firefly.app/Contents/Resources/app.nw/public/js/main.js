@@ -309,7 +309,6 @@
       data.from = storage.getLocalStorage('name');
 
       request.post({url : targetUrl, formData : data}, function (err, res, body) {
-        console.log(res);
 
         $('#device-' + targetNum)
         .find('.device-percentage')
@@ -358,6 +357,7 @@
           if (!info.internal && info.family === 'IPv4' && info.address !== '127.0.0.1') {
             prefix = info.address.substring(0, info.address.lastIndexOf('.') + 1);
             selfPrefix = parseInt(info.address.substring(info.address.lastIndexOf('.') + 1, info.address.length));
+            return;
           }  
         }  
       }
