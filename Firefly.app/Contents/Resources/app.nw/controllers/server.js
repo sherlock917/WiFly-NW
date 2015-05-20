@@ -11,6 +11,7 @@ exports.start = function () {
 
   app.get('/', route.index)
   app.get('/id', route.id)
+  app.get('/chat', route.chat)
   app.post('/upload', route.upload)
 
   app.listen(12580)

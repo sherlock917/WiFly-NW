@@ -186,16 +186,26 @@ body {
   overflow: hidden;
 }
 
-.device-send {
+.device-send,
+.device-chat {
   width: 30px;
   height: 30px;
   display: block;
   float: right;
+  margin-left: 20px;
   cursor: pointer;
-  background: url(../img/send.png);
   background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
-.device-send:hover {
+.device-send {
+  background-image: url(../img/send.png);
+}
+.device-chat {
+  background-image: url(../img/chat.png);
+}
+.device-send:hover,
+.device-chat:hover {
   opacity: 0.5;
 }
 
@@ -211,7 +221,7 @@ body {
   color: #f00;
 }
 .device-status-success {
-  color: #0f0;
+  color: #e6ff00;
 }
 
 .device-progress-outer {

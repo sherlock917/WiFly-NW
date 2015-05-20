@@ -11,6 +11,7 @@ var Template = {
         '<span class="device-progress-inner"></span>',
       '</span>',
       '<span class="device-percentage"></span>',
+      '<button class="device-chat"></button>',
       '<button class="device-send"></button>',
     '</p>',
   '</li>'].join(''),

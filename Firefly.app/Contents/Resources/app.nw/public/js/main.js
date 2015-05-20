@@ -131,6 +131,7 @@
       dom.find('.device-name').text(data.name);
       dom.find('.device-ip').text(data.url.substring(7, data.url.indexOf(':12580')));
       dom.find('.device-send').click(this.selectFile);
+      dom.find('.device-chat').click(this.chat);
       dom.appendTo('#device-list');
       Page.hideProgress();
     },
@@ -232,6 +233,20 @@
       targetUrl = url;
       $('#file').click();
     },
+    chat : function (e) {
+      e.stopPropagation();
+      var num = $(this).parent().parent().attr('id').split('-').pop();
+      var target = peers[num].url;
+      var targetName = $(this).parent().parent().find('.device-name').text();
+      var url = target + 'chat';
+      var content = prompt('Enter Message For ' + targetName + ':');
+      if (content && content.length > 0) {
+        var from = 'from=' + storage.getLocalStorage('name');
+        var content = 'content=' + content;
+        var replyUrl = 'url=' + server.getBaseUrl() + 'chat';
+        request(encodeURI(url + '?' + from + '&' + content + '&' + replyUrl));
+      }
+    },
     sendFile : function (e) {
       var file = e.target.files[0];
       if (file) {
@@ -294,7 +309,6 @@
       data.from = storage.getLocalStorage('name');
 
       request.post({url : targetUrl, formData : data}, function (err, res, body) {
-        console.log(res);
 
         $('#device-' + targetNum)
         .find('.device-percentage')
@@ -343,6 +357,7 @@
           if (!info.internal && info.family === 'IPv4' && info.address !== '127.0.0.1') {
             prefix = info.address.substring(0, info.address.lastIndexOf('.') + 1);
             selfPrefix = parseInt(info.address.substring(info.address.lastIndexOf('.') + 1, info.address.length));
+            return;
           }  
         }  
       }
