@@ -2,6 +2,10 @@ var fs=require('fs')
 
 var blocksz=1024;
 
+exports.getBlockSize = function(path){
+	return JSON.parse(fs.readFileSync(path)).blockTot;
+}
+
 exports.slice = function(path,callback){//[ Path of the file to slice ] -> Number of blocks
 	console.log(path)
 	var name=path.split('/').pop()
@@ -39,7 +43,7 @@ exports.merge = function(lpath,name){//[ Path of the file to sav, Name of the fi
 
 
 	var downObj=JSON.parse(fs.readFileSync(hidenDirPath+'/'+name+'.download'));
-	for(var tot=0;tot<downObj.blockN;tot++){
+	for(var tot=0;tot<downObj.blockTot;tot++){
 		var rstream = fs.createReadStream(hidenDirPath+'/'+name+'.'+tot);
 		var wstream = fs.createWriteStream(path+'.new',{flags:'a'})
 		rstream.pipe(wstream);

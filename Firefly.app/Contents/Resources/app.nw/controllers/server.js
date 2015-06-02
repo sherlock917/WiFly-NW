@@ -13,6 +13,7 @@ exports.start = function () {
   app.get('/id', route.id)
   app.get('/chat', route.chat)
   app.post('/upload', route.upload)
+  app.post('/uploadHead', route.uploadHead)
 
   app.listen(12580)
 }
