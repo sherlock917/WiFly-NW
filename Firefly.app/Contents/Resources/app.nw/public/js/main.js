@@ -6,11 +6,12 @@
       interfaces = require('os').networkInterfaces();
 
   var server = require('../controllers/server'),
-      storage = require('../controllers/storage');
+      storage = require('../controllers/storage'),
+      slicer = require('../controllers/slicer');
 
   var peers = {};
   var prefix = '', suffix = 1, selfSuffix = 0;
-  var targetNum, targetUrl;
+  var targetNum, targetUrl, targetHeadUrl, targetChunkUrl;
 
   var host = server.getBaseUrl();
 
@@ -228,9 +229,13 @@
         url = target.url.replace(/:12580/, '') + 'upload';
       } else  {
         url = target.url + 'upload';
+        headUrl = target.url+'uploadHead';
+        chunkUrl = target.url + 'uploadChunk';
       }
       targetNum = num;
       targetUrl = url;
+      targetHeadUrl = headUrl;
+      targetChunkUrl = chunkUrl;
       $('#file').click();
     },
     chat : function (e) {
@@ -263,7 +268,8 @@
         if (targetUrl.indexOf(':12580') < 0) {
           Page.sendToIos(file);
         } else {
-          Page.performSend(file);
+          Page.sendInChunk(file);
+          //Page.performSend(file);
         }
       }
     },
@@ -333,6 +339,118 @@
         }
       }).on('data', function (data) {
         Page.updateProgress(targetNum, data.toString());
+      });
+    },
+    sendInChunk : function (file) {
+      var fs = require('fs');
+
+      var tot_err_this_sending = 0;
+
+      var chunk_size = slicer.getFitableChunkSize(file.size);
+      var file_name = file.path.split('/').pop();
+      var file_leftPath = file.path.substring(0, file.path.length - file_name.length);
+      var file_cfgPath = file_leftPath + '.' + file_name + '/';
+      var file_chunkNum = slicer.getChunkNumFromSize(file.size, chunk_size);
+
+      slicer.getMD5fromFile(file.path,function(file_md5){
+
+        function emit(seq){
+          chunk_path = file_cfgPath + file_name + '.' + seq;
+
+          var data = {};
+          data.file = fs.createReadStream(chunk_path);
+          data.name = file.name + '.' + seq;
+          data.size = (seq + 1 == file_chunkNum ? file.size - seq * chunk_size : chunk_size);
+          data.type = file.type;
+          data.from = storage.getLocalStorage('name');
+
+          slicer.getMD5fromFile(chunk_path,function(chunk_md5){
+            request.post({url : targetChunkUrl, formData : data, headers: {'file_md5': file_md5, 'chunk_md5': chunk_md5, 'file_foresize': seq * chunk_size}}, function (err, res, body) {
+              if (err || res.statusCode != 200) {
+                //emit unsuccessfully
+                tot_err_this_sending++;
+                if(tot_err_this_sending>5){
+                  //if retry over 5 times
+                  $('#device-' + targetNum)
+                  .find('.device-percentage')
+                  .text('');
+
+                  $('#device-' + targetNum)
+                  .find('.device-progress-outer')
+                  .hide();
+
+                  $('#device-' + targetNum)
+                  .find('.device-status')
+                  .removeClass('device-status-success')
+                  .addClass('device-status-error')
+                  .text('error');
+                }
+                else{
+                  //resend
+                  emit(seq);
+                }
+              } else {
+                //successfully emit 1 package
+                slicer.setSuccessChunk(file_md5,seq + 1);
+                if(seq + 1 != file_chunkNum){
+                  //continue sending
+                  emit(seq + 1);
+                }
+                else{
+                  //finish
+                  exec('rm -rf '+file_cfgPath,function(err,out) { 
+                    if(err)
+                      console.log(err); 
+                  });
+
+                  $('#device-' + targetNum)
+                  .find('.device-percentage')
+                  .text('');
+
+                  $('#device-' + targetNum)
+                  .find('.device-progress-outer')
+                  .hide();
+
+                  $('#device-' + targetNum)
+                  .find('.device-status')
+                  .removeClass('device-status-error')
+                  .addClass('device-status-success')
+                  .text('√');
+                }
+              }
+            }).on('data', function (data) {
+              Page.updateProgress(targetNum, data.toString());
+            });
+          }); 
+        }
+
+        var curChunk = slicer.getSuccessChunk(file_md5);
+        //console.log("main::sendinchunk:curChunk"+curChunk);
+        if(curChunk != undefined && curChunk < file_chunkNum){
+          //resume
+          emit(curChunk)
+        }
+        else{
+          //init
+          slicer.slice(file.path, chunk_size, function(){
+            var data = {}
+            data.file_md5 = file_md5;
+            data.file_name = file_name;
+            data.file_size = file.size;
+
+            request.post({url : targetHeadUrl, form : data}, function (err, res, body){
+              if (err || res.statusCode != 200){
+                //console.log("main::sendinchunk:headPost lost");
+              }
+              else{
+                //console.log("main::sendinchunk:traceback received.");
+                slicer.setSuccessChunk(file_md5,0);
+                //console.log("going to send.");
+                emit(0);
+              }
+            });
+          });
+        }
       });
     }
   };
