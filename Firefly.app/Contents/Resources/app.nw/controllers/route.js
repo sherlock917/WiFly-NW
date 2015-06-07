@@ -123,6 +123,7 @@ exports.uploadChunk = function(req,res){
     console.log(files.file.name)
     if (err) {
       res.statusCode = 500;
+      res.end();
     } else {
       var file_suffix = files.file.name.split('.').pop();
       var file_chunkN = parseInt(file_suffix);
