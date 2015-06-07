@@ -1,6 +1,7 @@
 var fs = require('fs')
   , url = require('url')
   , exec = require('child_process').execSync
+  , asyexec = require('child_process').exec
   , request = require('request')
   , formidable = require('formidable')
 
@@ -104,12 +105,15 @@ exports.uploadChunk = function(req,res){
   var file_foreSize = parseInt(req.headers.file_foresize);
   var chunk_size = slicer.getFitableChunkSize(file_size);
   var chunk_md5 = req.headers.chunk_md5;
+  var chunk_tmpPath = '../temp/';
+  if(!fs.existsSync(chunk_tmpPath))
+      fs.mkdirSync(chunk_tmpPath)
 
   console.log(req.headers);
 
   var form = new formidable.IncomingForm();
   form.encoding = 'utf-8'
-  form.uploadDir = '../temp/'
+  form.uploadDir = chunk_tmpPath;
   form.keepExtensions = true
   form.on('progress', function (bytesReceived, bytesExpected) {
     console.log(((file_foreSize + bytesReceived )/ file_size * 100).toFixed(0));
@@ -140,6 +144,10 @@ exports.uploadChunk = function(req,res){
         else{
           if(file_chunkN + 1 == file_chunkTot){
             slicer.merge(file_path, file_prefixname, file_chunkTot);
+            exec('rm -rf '+file_path+'/.'+file_prefixname,function(err,out) { 
+			  if(err)
+			  	console.log(err); 
+			});
             storage.addReceived({
               path : file_path+'/'+file_prefixname,
               name : file_prefixname,

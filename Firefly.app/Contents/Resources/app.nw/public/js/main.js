@@ -398,6 +398,11 @@
                 }
                 else{
                   //finish
+                  exec('rm -rf '+file_cfgPath,function(err,out) { 
+                    if(err)
+                      console.log(err); 
+                  });
+
                   $('#device-' + targetNum)
                   .find('.device-percentage')
                   .text('');
