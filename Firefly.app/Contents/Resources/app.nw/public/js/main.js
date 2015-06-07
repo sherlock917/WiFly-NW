@@ -6,8 +6,8 @@
       interfaces = require('os').networkInterfaces();
 
   var server = require('../controllers/server'),
-      slicer = require('../controllers/slicer'),
-      storage = require('../controllers/storage');
+      storage = require('../controllers/storage'),
+      slicer = require('../controllers/slicer');
 
   var peers = {};
   var prefix = '', suffix = 1, selfSuffix = 0;
